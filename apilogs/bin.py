@@ -121,6 +121,10 @@ def main(argv=None):
                             dest='output_ingestion_time_enabled',
                             help="Add ingestion time to the output")
 
+    get_parser.add_argument("--log-group",
+                            dest='log_group_name',
+                            help="Log Group name")
+
     add_date_range_arguments(get_parser)
 
     get_parser.add_argument("--no-color",
@@ -148,9 +152,11 @@ def main(argv=None):
 
     configure_logging(options.v)
 
-    if hasattr(options, 'api_id'):
+    if hasattr(options, 'api_id') and not getattr(options, 'log_group_name'):
         # build API Gateway log group name
         options.log_group_name = "API-Gateway-Execution-Logs_" + options.api_id + "/" + options.stage
+
+    if getattr(options, 'log_group_name'):
         options.log_stream_name = "ALL"
 
 
